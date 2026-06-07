@@ -391,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             return data.reply;
+
         } catch (err) {
             console.error(err);
             return "Error connecting to AI server.";
