@@ -374,24 +374,26 @@ document.addEventListener('DOMContentLoaded', () => {
     aiToggle.addEventListener('click', () => aiWindow.classList.toggle('active'));
     closeChat.addEventListener('click', () => aiWindow.classList.remove('active'));
 
-    async function getAIResponse(message) {
+    async function sendMessage(message) {
         try {
             const res = await fetch("/api/chat", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ message })
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.error || "Server error");
+                return "Error: " + (data.error || "Server error");
             }
 
             return data.reply;
-        } catch (error) {
-            console.error(error);
-            return "⚠️ Error connecting to AI server.";
+        } catch (err) {
+            console.error(err);
+            return "Error connecting to AI server.";
         }
     }
 
@@ -417,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingDiv.textContent = 'Typing...';
         aiMessages.appendChild(loadingDiv);
 
-        const aiResponse = await getAIResponse(text);
+        const aiResponse = await sendMessage(text);
         
         // Remove loading and show response
         aiMessages.removeChild(loadingDiv);
